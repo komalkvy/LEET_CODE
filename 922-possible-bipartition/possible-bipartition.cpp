@@ -1,32 +1,28 @@
 class Solution {
 public:
-
-    bool dfs(vector<int>& c, vector<vector<int>>& adj, int i, int color){
-        c[i] = color;
-        for(auto &x: adj[i]){
-            if(c[x] == -1){
-                if(!dfs(c, adj, x, 1-color)) return false;
-            }
-            else if(c[x] == c[i]){
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
-        vector<vector<int>> adj(n);
-        for(auto x: dislikes){
-            int from = x[0]-1;
-            int to =x[1]-1;
-            adj[from].push_back(to);
-            adj[to].push_back(from);
+         vector<vector<int>> adj(n + 1);
+        for (auto &d : dislikes) {
+            adj[d[0]].push_back(d[1]);
+            adj[d[1]].push_back(d[0]);
         }
-        vector<int> c(n,-1);
-        for(int i=0;i<n;i++){
-            if(c[i] == -1){
-                if(!dfs(c, adj, i, 0)) return false;
+        queue<int>q;
+        vector<int> vis(n+1,-1);
+        for(int i =1 ; i<=n ; i++){
+            if(vis[i]==-1){
+                q.push(i);vis[i]=0;
+                while(!q.empty()){
+                    int node = q.front();q.pop();
+                    for(auto j:adj[node]){
+                        if(vis[j]==-1){
+                            vis[j]=1-vis[node];
+                            q.push(j);
+                        }
+                        else if(vis[j]==vis[node]){
+                            return false;
+                        }
+                    }
+                }
             }
         }
         return true;
