@@ -1,18 +1,16 @@
 class Solution {
 public:
     int numSpecialEquivGroups(vector<string>& words) {
-        unordered_set<string> seen;
-        int maxi = 0;
-        for(int i = 0, n = words.size(); i < n; ++i){
-            string odd, even;
-            for(int j = 0, m = words[i].length(); j < m; ++j){
-                if(j & 1) odd.push_back(words[i][j]);
-                else even.push_back(words[i][j]);
-            }
-            sort(odd.begin() , odd.end());
-            sort(even.begin() , even.end());
-            seen.insert(even + odd);
+        unordered_map<string,int>mp;
+        for (int i=0;i<words.size();i++){
+            string x="",y="";
+            for (int j=0;j<words[i].size();j+=2){x+=words[i][j];}
+            sort(x.begin(),x.end());
+            for (int j=1;j<words[i].size();j+=2){y+=words[i][j];}
+            sort(y.begin(),y.end());
+            words[i]=x+y;
+            mp[words[i]]++;
         }
-        return seen.size();
+        return mp.size();
     }
 };
